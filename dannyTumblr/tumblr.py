@@ -67,7 +67,12 @@ class Tumblr:
 
         pages=[]
         if types == 'full-page':
-            information = 'http://' + info + '.tumblr.com/page/' + page_number
+            tag_info = input('paste tags or input 0 for none :')
+            if tag_info == '0':
+                information = 'http://' + info + '.tumblr.com/page/' + page_number
+            else:
+                information = tag_info + '/page/' + page_number
+
             if len(page_number.split(',')) > 1:
                 # 頁數範圍：
                 pages = [int(page_number.split(',')[0]),int(page_number.split(',')[1])]
@@ -327,7 +332,8 @@ class Tumblr:
 
     def download_full_page(self, info, information,pages):  # 在full-page 找到每則po文的url 最後會丟回到 post-page 去載資料
 
-        pat_information_cut = re.compile('http://.*.tumblr.com/page/' )
+        # pat_information_cut = re.compile('http://.*.tumblr.com/page/' )
+        pat_information_cut = re.compile('http://.*./page/')
         information_cut_for_crawler = pat_information_cut.search(information).group()
         article_post_filelist_for_loop = []
         #print('pages:{}'.format(pages))
@@ -373,21 +379,46 @@ class Tumblr:
 
                     elif soup.find('div'):
                         print('##### Situation 2: Post文章編號 藏在div #####')
-
                         article_post = soup.find_all('div')
                         article_post_num = [i.get('data-post-id') for i in article_post]
                         article_post_num = [i for i in article_post_num if i != None]
                         article_post_filelist = ['https://' + info + '.tumblr.com/post/' + i for i in article_post_num]
-                        print('所有網址:{}'.format(article_post_filelist))
-                        #return article_post_filelist
+                        if article_post_filelist != []:
+                            print('所有網址:{}'.format(article_post_filelist))
+                            print(len(article_post_filelist))
+                            #return article_post_filelist
+                        else:
+                            article_post_num = []
+                            article_post_filelist = []
+                            print('New 隱藏位置＿new version: 2018/01/29')
+                            print('↓↓↓↓↓↓↓')
+                            try:
+                                again= soup.find_all('a')
+                                # print(again)
+                                for i in again:
+                                    g= i.get('href')
+                                    article_post_num.append(g)
+                                # print(article_post_num)
 
+                                pat20180129 = re.compile('.*/post/.*')
+                                for i in article_post_num:
+                                    if pat20180129.search(i) :
+                                        temp_c= pat20180129.search(i).group()
+                                        # print(temp_c)
+                                        article_post_filelist.append(temp_c)
+                                print(article_post_filelist)
+
+                            except:
+                                print(damn)
+
+                            print('↑↑↑↑↑↑↑')
                     else:
                         print('##### Situation else #####')
 
                     [article_post_filelist_for_loop.append(af) for af in article_post_filelist]
                     bool_for_now_loading = False
                 except:
-                    print('正在讀取 但是掉線 重新啟動虛擬瀏覽器試試')
+                    print('正在讀取 但是掉線正在重新啟動虛擬瀏覽器')
                     bool_for_now_loading = True
 
         print('所有網址共{}則'.format(len(article_post_filelist_for_loop)))
