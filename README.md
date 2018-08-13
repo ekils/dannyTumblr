@@ -20,3 +20,8 @@ v1.0:
 
 * 可視化：
 ![GitHub Logo](https://github.com/ekils/dannyTumblr/blob/master/dannyTumblr/data.gif)
+
+
+<br>
+2018/08/13:<br>
+由於Tumblr登陸更新。目前需修正登錄方式
