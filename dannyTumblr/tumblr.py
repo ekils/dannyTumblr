@@ -137,14 +137,14 @@ class Tumblr:
             self.mysqldata.update_folder_size(info, self.file_size(info))
 
         # 進入download 回圈：
-        pat_jpg = re.compile('(?:http|https)://78.media.tumblr.com/.*/tumblr_.*?\.(?:png|jpg|gif)')  # ? 匹配0次或一次
+        pat_jpg = re.compile('(?:http|https)://66.media.tumblr.com/.*/tumblr_.*?\.(?:png|jpg|gif)')  # ? 匹配0次或一次
         # print(urls)
         list_photo = []
         minus_article_count = 0 # 文章計數器
 
         for adress in urls:
             bool_for_tomeout = True
-
+            print(f'現在看網址： {adress}')
             while bool_for_tomeout == True:
                 try:
                     driver.get(adress)   # 之後加個try 以防之後網路問題crash
@@ -153,6 +153,12 @@ class Tumblr:
                     # 找tag裡的meta 和 img：
                     photo_meta = soups.find_all('meta')  # 圖藏在 content 裡面
                     photo_imgsrc = soups.find_all('img')  # 圖存在tag img 裡的 src
+                    # print(photo_meta)
+                    # print('')
+                    # print('==========     ==================     =============      ====================')
+                    # print(photo_imgsrc)
+                    # print('==========     ==================     =============      ====================')
+                    # print('')
 
                     # 把找到的url 丟進ist裡去：
                     photo_meta_url_list = [pat_jpg.search(str(i)).group() for i in photo_meta if pat_jpg.search(str(i))]

@@ -1,6 +1,8 @@
 #coding=utf-8
 
 import numpy as np
+import matplotlib
+matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import datetime
